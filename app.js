@@ -1,8 +1,8 @@
-import fetch from 'node-fetch';
-import {JSDOM} from 'jsdom';
-import * as fs from 'fs';
-import * as path from "path";
-import inquirer from 'inquirer';
+const fetch = require('node-fetch')
+const { JSDOM } = require('jsdom');
+const fs = require('fs');
+const path = require('path');
+const inquirer = require('inquirer');
 
 const leagueIDs = {"Sr. Girls": "66851", "Sr. Boys": "66850", "Jr. Girls": "66853", "Jr. Boys": "66852"};
 const noop = () => {};
