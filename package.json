@@ -12,7 +12,8 @@
   "dependencies": {
     "inquirer": "^8.2.0",
     "jsdom": "^18.0.0",
-    "node-fetch": "^3.0.0"
+    "node-fetch": "^3.0.0",
+    "pkg": "^5.3.3"
   },
   "type": "module"
 }
