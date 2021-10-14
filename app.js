@@ -74,9 +74,11 @@ async function getStats(league_id) {
         teams.push(new Team(data[i]));
     }
 
-    for (let i = 0; i < data.length; i++) createAndSave(teams[i], getKeyByValue(leagueIDs, league_id));
+    let league = getKeyByValue(leagueIDs, league_id);
 
-    console.log(`Done fetching stats for league ID: ${league_id}`);
+    for (let i = 0; i < data.length; i++) createAndSave(teams[i], league);
+
+    console.log(`Done fetching stats for league ID: ${league_id} (${league})`);
 
 }
 
