@@ -10,13 +10,14 @@ const noop = () => {};
 
 class Team {
 
-    name;
-    played;
-    wins;
-    losses;
-    pf;
-    pa;
-    points;
+    name;   // Team name on Metro Athletics
+    seed;   // Position in the standings
+    played; // Games Played
+    wins;   // W
+    losses; // L
+    pf;     // Points in favour
+    pa;     // Points against
+    points; // Total points in the standings
 
     constructor(array) {
         if (array.length !== 7) {
@@ -39,24 +40,27 @@ function getKeyByValue(object, value) {
 }
 
 function tableToArray(tableBody) {
-    let my_list = []
+    let array = []
 
     for (let i = 0; i < tableBody.children.length; i++) {
         let el = tableBody.children[i]
-        let my_el = []
+        let row = []
         for (let j = 0; j < el.children.length; j++) {
-            my_el.push(el.children[j].textContent.trim());
+            row.push(el.children[j].textContent.trim());
         }
-        my_list.push(my_el)
+        array.push(row)
 
     }
-    return my_list;
+    return array;
 }
 
 function createAndSave(team, league) {
     if (!fs.existsSync(league)) {
         fs.mkdirSync(league, 0o744);
     }
+    // Write team info to files
+    // File structure: league/teamname.json
+    // TODO: In the future, structure should include year, sport, league, division
     fs.writeFile(path.join(league, `${team.name}.json`), JSON.stringify(team), noop);
 }
 
@@ -67,6 +71,7 @@ async function getStats(league_id) {
 
     let tableBody = document.querySelector("body > section > article > span:nth-child(10) > table.standings_table > tbody");
 
+    // data:    2D array of division table.
     let data = tableToArray(tableBody);
 
     let teams = [];
