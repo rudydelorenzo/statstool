@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
 
-const leagueIDs = {"Sr. Girls": "66851", "Sr. Boys": "66850", "Jr. Girls": "66853", "Jr. Boys": "66852"};
+const standingsURLs = {"Sr. Girls": "league_id=66851&schedule_id=434642", "Sr. Boys": "league_id=66850&schedule_id=434641",
+    "Jr. Girls": "league_id=66853&schedule_id=434644", "Jr. Boys": "league_id=66852&schedule_id=434643"};
 const noop = () => {};
 
 
@@ -64,8 +65,8 @@ function createAndSave(team, league) {
     fs.writeFile(path.join(league, `${team.name}.json`), JSON.stringify(team), noop);
 }
 
-async function getStats(league_id) {
-    let url = `http://metroathletics.ca/standings.php?league_id=${league_id}`;
+async function getStats(standingsURL) {
+    let url = `http://metroathletics.ca/standings.php?${standingsURL}`;
     let jsdomDocument = new JSDOM(await (await fetch(url)).text());
     let document = jsdomDocument.window.document;
 
@@ -79,11 +80,11 @@ async function getStats(league_id) {
         teams.push(new Team(data[i]));
     }
 
-    let league = getKeyByValue(leagueIDs, league_id);
+    let league = getKeyByValue(standingsURLs, standingsURL);
 
     for (let i = 0; i < data.length; i++) createAndSave(teams[i], league);
 
-    console.log(`Done fetching stats for league ID: ${league_id} (${league})`);
+    console.log(`Done fetching stats for league: ${league}\tURL: (${standingsURL})`);
 
 }
 
@@ -94,13 +95,13 @@ function main() {
                 type: 'checkbox',
                 name: 'level',
                 message: 'Which leagues do you want to download stats for?',
-                choices: Object.keys(leagueIDs),
-                default: Object.keys(leagueIDs)
+                choices: Object.keys(standingsURLs),
+                default: Object.keys(standingsURLs)
             },
         ])
         .then((answers) => {
             for (let i = 0; i < answers.level.length; i++) {
-                getStats(leagueIDs[answers.level[i]]);
+                getStats(standingsURLs[answers.level[i]]);
             }
         });
 }
